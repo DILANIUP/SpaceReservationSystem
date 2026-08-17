@@ -1,0 +1,28 @@
+# Build
+bin/
+obj/
+*.user
+
+# Visual Studio
+.vs/
+.idea/
+*.suo
+
+# .NET
+*.csproj.user
+project.lock.json
+
+# Configuraciones sensibles
+appsettings.Development.json
+.env
+
+# Migraciones generadas (opcional, algunos prefieren incluirlas)
+# **/Migrations/
+
+# Logs
+*.log
+logs/
+
+# OS
+.DS_Store
+Thumbs.db
