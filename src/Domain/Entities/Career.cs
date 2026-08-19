@@ -1,4 +1,4 @@
-namespace SpaceReservationSystem.Domain.Primitives;
+namespace SpaceReservationSystem.Domain.Entities;
 
 public class Career
 {
@@ -7,4 +7,4 @@ public class Career
     public Guid FacultyId { get; set; }
     public Faculty Faculty { get; set; } = null!;
     public ICollection<User> Users { get; set; } = [];
-}
+}  

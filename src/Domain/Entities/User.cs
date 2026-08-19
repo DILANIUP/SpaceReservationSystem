@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace SpaceReservationSystem.Domain.Primitives;
+namespace SpaceReservationSystem.Domain.Entities;
 
 public class User
 {
@@ -14,5 +14,5 @@ public class User
     public Guid? CareerId { get; set; }
     public Career? Career { get; set; } = null!; //* es nullable porque no todos los roles necesariamente tienen
     // public ICollection<Reservation> Reservations { get; set; } = [];
-    // public ICollection<ReservationHistory> ReservationHistories { get; set; } = [];
+    public ICollection<ReservationHistory> ReservationHistories { get; set; } = [];
 }

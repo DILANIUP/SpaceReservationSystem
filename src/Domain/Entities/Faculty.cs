@@ -1,4 +1,4 @@
-namespace SpaceReservationSystem.Domain.Primitives;
+namespace SpaceReservationSystem.Domain.Entities;
 
 public class Faculty
 {
