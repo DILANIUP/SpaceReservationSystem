@@ -21,4 +21,10 @@ public class AppDbContext : DbContext
     public DbSet<Alert> Alerts => Set<Alert>();
     public DbSet<EmailTemplate> EmailTemplates => Set<EmailTemplate>();
     public DbSet<EmailLog> EmailLogs => Set<EmailLog>();
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
+        base.OnModelCreating(modelBuilder);
+    }
 }
