@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SpaceReservationSystem.Domain.Entities;
 
-namespace SpaceReservationSystem.Domain.Entities;
+namespace SpaceReservationSystem.Infrastructure.Persistence.Configurations;
 
 public class VoucherConfiguration : IEntityTypeConfiguration<Voucher>
 {
