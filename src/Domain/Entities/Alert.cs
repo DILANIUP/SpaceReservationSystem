@@ -1,17 +1,59 @@
+using SpaceReservationSystem.Domain.Enums;
+using SpaceReservationSystem.Domain.Errors;
+using SpaceReservationSystem.Domain.Primitives;
+
 namespace SpaceReservationSystem.Domain.Entities;
 
-public class Alert
+public class Alert : AuditableEntity
 {
-    public Guid Id { get; set; }
-    public required string Type { get; set; }
-    public required string Description { get; set; }
-    public DateTime CreatedAt { get; set; }
-    public DateTime? ResolvedAt { get; set; }
-    public bool IsResolved { get; set; }
+    public AlertType Type { get; private set; }
+    public string Description { get; private set; }
+    public DateTime CreatedAt { get; private set; }
+    public DateTime? ResolvedAt { get; private set; }
+    public bool IsResolved { get; private set; }
 
-    public Guid? ResourceId { get; set; }
-    public Resource? Resource { get; set; }
+    public Guid? ResourceId { get; private set; }
+    public Resource? Resource { get; private set; }
 
-    public Guid? SpaceId { get; set; }
-    public Space? Space { get; set; }
+    public Guid? SpaceId { get; private set; }
+    public Space? Space { get; private set; }
+
+
+
+    private Alert(Guid id, AlertType type, string description, Guid? resourceId, Guid? spaceId)
+        : base(id)
+    {
+        Type = type;
+        Description = description;
+        ResourceId = resourceId;
+        SpaceId = spaceId;
+        IsResolved = false;
+    }
+
+    private Alert() { }
+
+    public static Result<Alert> Create(
+        AlertType type,
+        string description,
+        Guid? resourceId = null,
+        Guid? spaceId = null)
+    {
+        if (string.IsNullOrWhiteSpace(description))
+            return Result.Failure<Alert>(AlertErrors.InvalidDescription);
+
+        if (resourceId is null && spaceId is null)
+            return Result.Failure<Alert>(AlertErrors.MissingTarget);
+
+        return new Alert(Guid.NewGuid(), type, description.Trim(), resourceId, spaceId);
+    }
+
+    public Result Resolve()
+    {
+        if (IsResolved)
+            return Result.Failure(AlertErrors.AlreadyResolved);
+
+        IsResolved = true;
+        ResolvedAt = DateTime.UtcNow;
+        return Result.Success();
+    }
 }

@@ -26,3 +26,6 @@ logs/
 # OS
 .DS_Store
 Thumbs.db
+
+# Ignorar migraciones de Entity Framework
+**/Migrations/*

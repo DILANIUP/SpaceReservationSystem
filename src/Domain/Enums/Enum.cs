@@ -1,3 +1,5 @@
+namespace SpaceReservationSystem.Domain.Enums;
+
 public enum RoleCode
 {
     Student = 1,

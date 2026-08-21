@@ -1,3 +1,4 @@
+using SpaceReservationSystem.Domain.Enums;
 using SpaceReservationSystem.Domain.Errors;
 using SpaceReservationSystem.Domain.Primitives;
 
