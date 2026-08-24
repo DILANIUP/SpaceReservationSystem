@@ -27,6 +27,7 @@ public static class UserErrors
     public static readonly Error InvalidRole = new("User.InvalidRole", "A valid role id is required.");
     public static readonly Error InvalidCareer = new("User.InvalidCareer", "A valid career id is required.");
     public static readonly Error InvalidPassword = new("User.InvalidPassword", "The password hash is invalid.");
+    public static readonly Error NotFound = new("User.NotFound", "The user was not found.");
 }
 
 public static class SpaceErrors

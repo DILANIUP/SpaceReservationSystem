@@ -24,8 +24,8 @@ public enum ReservationStatus
 public enum SpaceType
 {
     Classroom = 1,
-    Auditorium = 3,
     Laboratory = 2,
+    Auditorium = 3,
     Cafeteria = 4,
     Other = 5
 }
@@ -33,7 +33,7 @@ public enum SpaceType
 public enum AlertType
 {
     Damage = 1,
-    Unvailable = 2,
+    Unavailable = 2,
     Maintenance = 3,
     Incident = 4,
     Other = 5

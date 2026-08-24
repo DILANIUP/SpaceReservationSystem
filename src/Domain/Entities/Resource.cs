@@ -13,7 +13,7 @@ public class Resource : AuditableEntity
     public ICollection<ReservationResource> ReservationResources { get; private set; } = new List<ReservationResource>();
     public ICollection<Alert> Alerts { get; private set; } = new List<Alert>();
 
-    private Resource(Guid id, string name, string? description, int availableQuantity, bool status)
+    private Resource(Guid id, string name, string? description, int availableQuantity, bool status): base(id) 
     {
         Name = name;
         Description = description;

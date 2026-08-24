@@ -12,7 +12,7 @@ public class Reservation : AuditableEntity
     public DateTime Date { get; private set; }
     public TimeSpan StartTime { get; private set; }
     public TimeSpan EndTime { get; private set; }
-    public string Reason { get; private set; }
+    public string Reason { get; private set; } = null!;
     public ReservationStatus CurrentStatus { get; private set; }
     public DateTime RequestDate { get; private set; }
 
