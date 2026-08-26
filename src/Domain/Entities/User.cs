@@ -1,12 +1,13 @@
 using SpaceReservationSystem.Domain.Errors;
 using SpaceReservationSystem.Domain.Primitives;
+using SpaceReservationSystem.Domain.ValueObjects;
 
 namespace SpaceReservationSystem.Domain.Entities;
 
 public class User : AuditableEntity
 {
     public string Name { get; private set; } = null!;
-    public string Email { get; private set; } = null!;
+    public Email Email { get; private set; } = null!;
     public string PasswordHash { get; private set; } = null!;
     public string Phone { get; private set; } = null!;
     public Guid RoleId { get; private set; }
@@ -16,7 +17,7 @@ public class User : AuditableEntity
     public ICollection<Reservation> Reservations { get; private set; } = new List<Reservation>();
     public ICollection<ReservationHistory> ReservationHistories { get; set; } = new List<ReservationHistory>();
 
-    private User(Guid id, string name, string email, string passwordHash, string phone, Guid roleId, Guid? careerId) 
+    private User(Guid id, string name, Email email, string passwordHash, string phone, Guid roleId, Guid? careerId) 
         : base(id)
     {
         Name = name;
@@ -32,7 +33,7 @@ public class User : AuditableEntity
 
     public static Result<User> Create(
         string name,
-        string email,
+        Email email,
         string passwordHash,
         string phone,
         Guid roleId,
@@ -42,7 +43,7 @@ public class User : AuditableEntity
         if(string.IsNullOrWhiteSpace(name))
             return Result.Failure<User>(UserErrors.InvalidName);
 
-        if(string.IsNullOrWhiteSpace(email))
+        if(string.IsNullOrWhiteSpace(email.Value))
             return Result.Failure<User>(UserErrors.InvalidEmail);
 
         if(string.IsNullOrWhiteSpace(phone))

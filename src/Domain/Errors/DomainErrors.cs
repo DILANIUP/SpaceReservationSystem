@@ -50,12 +50,15 @@ public static class ResourceErrors
 
 public static class ReservationErrors
 {
-    public static readonly Error InvalidReason = new("Reservation.InvalidReason", "The reason is required.");
+    public static readonly Error InvalidDate = new("Reservation.InvalidDate", "The reservation date cannot be in the past.");
     public static readonly Error InvalidTimeRange = new("Reservation.InvalidTimeRange", "The end time must be greater than the start time.");
     public static readonly Error OutsideAllowedHours = new("Reservation.OutsideAllowedHours", "Reservations are only allowed between 7:00 AM and 11:00 PM.");
-    public static readonly Error InsufficientNotice = new("Reservation.InsufficientNotice", "Reservations must be made at least 72 hours in advance.");
+    public static readonly Error InvalidReason = new("Reservation.InvalidReason", "The reason is required.");
     public static readonly Error InvalidUser = new("Reservation.InvalidUser", "The user is invalid.");
+    public static readonly Error InsufficientNotice = new("Reservation.InsufficientNotice", "Reservations must be made at least 72 hours in advance.");
     public static readonly Error InvalidStatusTransition = new("Reservation.InvalidStatusTransition", "The reservation cannot transition to this status from its current state.");
+    public static readonly Error SlotAlreadyTaken = new("Reservation.SlotAlreadyTaken", "The space is already reserved for that time slot.");
+
 }
 
 public static class ReservationResourceErrors
@@ -100,3 +103,4 @@ public static class VoucherErrors
     public static readonly Error InvalidPath = new("Voucher.InvalidPath", "The PDF file path is required.");
     public static readonly Error InvalidReservation = new("Voucher.InvalidReservation", "A valid reservation id is required.");
 }
+

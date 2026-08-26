@@ -23,4 +23,5 @@ public sealed class Email : IEquatable<Email>
     public bool Equals(Email? other) => other is not null && Value == other.Value;
     public override bool Equals(object? obj) => Equals(obj as Email);
     public override int GetHashCode() => Value.GetHashCode();
+    public override string ToString() => Value;
 }

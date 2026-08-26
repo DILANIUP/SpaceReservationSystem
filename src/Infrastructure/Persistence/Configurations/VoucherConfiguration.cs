@@ -8,6 +8,7 @@ public class VoucherConfiguration : IEntityTypeConfiguration<Voucher>
 {
     public void Configure(EntityTypeBuilder<Voucher> builder)
     {
+        builder.Property(v => v.PdfFilePath).IsRequired();
         builder.HasIndex(v => v.ReservationId).IsUnique();
     }
 }

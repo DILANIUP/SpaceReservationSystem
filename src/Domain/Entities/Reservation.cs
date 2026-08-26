@@ -1,17 +1,15 @@
 using SpaceReservationSystem.Domain.Enums;
 using SpaceReservationSystem.Domain.Errors;
 using SpaceReservationSystem.Domain.Primitives;
+using SpaceReservationSystem.Domain.ValueObjects;
 
 namespace SpaceReservationSystem.Domain.Entities;
 
 public class Reservation : AuditableEntity
 {
-    private static readonly TimeSpan MinAllowedTime = new(7, 0, 0);
-    private static readonly TimeSpan MaxAllowedTime = new(23, 0, 0);
     private const int MinNoticeHours = 72;
-    public DateTime Date { get; private set; }
-    public TimeSpan StartTime { get; private set; }
-    public TimeSpan EndTime { get; private set; }
+
+    public ReservationSlot Slot { get; private set; } = null!;
     public string Reason { get; private set; } = null!;
     public ReservationStatus CurrentStatus { get; private set; }
     public DateTime RequestDate { get; private set; }
@@ -21,33 +19,24 @@ public class Reservation : AuditableEntity
 
     public Guid? SpaceId { get; private set; }
     public Space? Space { get; private set; }
-    // Navegacion Inversa
+
+    // Navegación inversa
     public Voucher? Voucher { get; private set; }
 
     public ICollection<ReservationResource> ReservationResources { get; private set; } = new List<ReservationResource>();
     public ICollection<ReservationHistory> ReservationHistories { get; private set; } = new List<ReservationHistory>();
 
-
-    private Reservation(
-        Guid id,
-        DateTime date,
-        TimeSpan startTime,
-        TimeSpan endTime,
-        string reason,
-        Guid userId,
-        Guid? spaceId
-    ) : base(id)
+    private Reservation(Guid id, ReservationSlot slot, string reason, Guid userId, Guid? spaceId)
+        : base(id)
     {
-        Date = date;
-        StartTime = startTime;
-        EndTime = endTime;
+        Slot = slot;
         Reason = reason;
         CurrentStatus = ReservationStatus.Draft;
         RequestDate = DateTime.UtcNow;
         UserId = userId;
         SpaceId = spaceId;
     }
-    
+
     private Reservation() { }
 
     public static Result<Reservation> Create(
@@ -56,8 +45,7 @@ public class Reservation : AuditableEntity
         TimeSpan endTime,
         string reason,
         Guid userId,
-        Guid? spaceId
-    )
+        Guid? spaceId)
     {
         if (string.IsNullOrWhiteSpace(reason))
             return Result.Failure<Reservation>(ReservationErrors.InvalidReason);
@@ -65,17 +53,14 @@ public class Reservation : AuditableEntity
         if (userId == Guid.Empty)
             return Result.Failure<Reservation>(ReservationErrors.InvalidUser);
 
-        if (endTime <= startTime)
-            return Result.Failure<Reservation>(ReservationErrors.InvalidTimeRange);
+        var slotResult = ReservationSlot.Create(date, startTime, endTime);
+        if (slotResult.IsFailure)
+            return Result.Failure<Reservation>(slotResult.Error);
 
-        if (startTime < MinAllowedTime || endTime > MaxAllowedTime)
-            return Result.Failure<Reservation>(ReservationErrors.OutsideAllowedHours);
-
-        var requestDate = DateTime.UtcNow;
-        if (date < requestDate.AddHours(MinNoticeHours))
+        if (date < DateTime.UtcNow.AddHours(MinNoticeHours))
             return Result.Failure<Reservation>(ReservationErrors.InsufficientNotice);
 
-        return new Reservation(Guid.NewGuid(), date, startTime, endTime, reason.Trim(), userId, spaceId);
+        return new Reservation(Guid.NewGuid(), slotResult.Value, reason.Trim(), userId, spaceId);
     }
 
     public Result SubmitToCoordinator()
@@ -127,34 +112,28 @@ public class Reservation : AuditableEntity
     {
         if (CurrentStatus is ReservationStatus.Rejected or ReservationStatus.Cancelled)
             return Result.Failure(ReservationErrors.InvalidStatusTransition);
-    
+
         CurrentStatus = ReservationStatus.Cancelled;
-        return Result.Success();    
+        return Result.Success();
     }
 
     public Result Update(DateTime date, TimeSpan startTime, TimeSpan endTime, string reason)
-{
+    {
         if (CurrentStatus != ReservationStatus.Draft)
             return Result.Failure(ReservationErrors.InvalidStatusTransition);
 
         if (string.IsNullOrWhiteSpace(reason))
             return Result.Failure(ReservationErrors.InvalidReason);
 
-        if (endTime <= startTime)
-            return Result.Failure(ReservationErrors.InvalidTimeRange);
+        var slotResult = ReservationSlot.Create(date, startTime, endTime);
+        if (slotResult.IsFailure)
+            return Result.Failure(slotResult.Error);
 
-        if (startTime < MinAllowedTime || endTime > MaxAllowedTime)
-            return Result.Failure(ReservationErrors.OutsideAllowedHours);
-
-        var requestDate = DateTime.UtcNow;
-        if (date < requestDate.AddHours(MinNoticeHours))
+        if (date < DateTime.UtcNow.AddHours(MinNoticeHours))
             return Result.Failure(ReservationErrors.InsufficientNotice);
 
-        Date = date;
-        StartTime = startTime;
-        EndTime = endTime;
+        Slot = slotResult.Value;
         Reason = reason.Trim();
         return Result.Success();
-}
-
+    }
 }

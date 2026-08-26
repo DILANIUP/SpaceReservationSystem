@@ -42,7 +42,8 @@ namespace SpaceReservationSystem.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
 
                     b.Property<bool>("IsResolved")
                         .HasColumnType("boolean");
@@ -97,7 +98,8 @@ namespace SpaceReservationSystem.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -134,7 +136,8 @@ namespace SpaceReservationSystem.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<string>("ErrorMessage")
-                        .HasColumnType("text");
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)");
 
                     b.Property<bool>("IsSent")
                         .HasColumnType("boolean");
@@ -150,7 +153,8 @@ namespace SpaceReservationSystem.Migrations
 
                     b.Property<string>("ToEmail")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -181,7 +185,8 @@ namespace SpaceReservationSystem.Migrations
 
                     b.Property<string>("Code")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -197,7 +202,8 @@ namespace SpaceReservationSystem.Migrations
 
                     b.Property<string>("Subject")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(250)
+                        .HasColumnType("character varying(250)");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -206,6 +212,9 @@ namespace SpaceReservationSystem.Migrations
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Code")
+                        .IsUnique();
 
                     b.ToTable("EmailTemplates");
                 });
@@ -230,7 +239,8 @@ namespace SpaceReservationSystem.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -258,30 +268,22 @@ namespace SpaceReservationSystem.Migrations
                     b.Property<int>("CurrentStatus")
                         .HasColumnType("integer");
 
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("timestamp with time zone");
-
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<Guid?>("DeletedBy")
                         .HasColumnType("uuid");
 
-                    b.Property<TimeSpan>("EndTime")
-                        .HasColumnType("interval");
-
                     b.Property<string>("Reason")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
 
                     b.Property<DateTime>("RequestDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<Guid?>("SpaceId")
                         .HasColumnType("uuid");
-
-                    b.Property<TimeSpan>("StartTime")
-                        .HasColumnType("interval");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -315,7 +317,8 @@ namespace SpaceReservationSystem.Migrations
 
                     b.Property<string>("Justification")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
 
                     b.Property<int>("NewStatus")
                         .HasColumnType("integer");
@@ -381,11 +384,13 @@ namespace SpaceReservationSystem.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<string>("Description")
-                        .HasColumnType("text");
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)");
 
                     b.Property<bool>("Status")
                         .HasColumnType("boolean");
@@ -424,7 +429,8 @@ namespace SpaceReservationSystem.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -433,6 +439,9 @@ namespace SpaceReservationSystem.Migrations
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Code")
+                        .IsUnique();
 
                     b.ToTable("Roles");
                 });
@@ -463,11 +472,13 @@ namespace SpaceReservationSystem.Migrations
 
                     b.Property<string>("Location")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(250)
+                        .HasColumnType("character varying(250)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)");
 
                     b.Property<int>("Type")
                         .HasColumnType("integer");
@@ -504,13 +515,10 @@ namespace SpaceReservationSystem.Migrations
                     b.Property<Guid?>("DeletedBy")
                         .HasColumnType("uuid");
 
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)");
 
                     b.Property<string>("PasswordHash")
                         .IsRequired()
@@ -518,7 +526,8 @@ namespace SpaceReservationSystem.Migrations
 
                     b.Property<string>("Phone")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
 
                     b.Property<Guid>("RoleId")
                         .HasColumnType("uuid");
@@ -532,9 +541,6 @@ namespace SpaceReservationSystem.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CareerId");
-
-                    b.HasIndex("Email")
-                        .IsUnique();
 
                     b.HasIndex("RoleId");
 
@@ -590,11 +596,13 @@ namespace SpaceReservationSystem.Migrations
                 {
                     b.HasOne("SpaceReservationSystem.Domain.Entities.Resource", "Resource")
                         .WithMany("Alerts")
-                        .HasForeignKey("ResourceId");
+                        .HasForeignKey("ResourceId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("SpaceReservationSystem.Domain.Entities.Space", "Space")
                         .WithMany("Alerts")
-                        .HasForeignKey("SpaceId");
+                        .HasForeignKey("SpaceId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Resource");
 
@@ -606,7 +614,7 @@ namespace SpaceReservationSystem.Migrations
                     b.HasOne("SpaceReservationSystem.Domain.Entities.Faculty", "Faculty")
                         .WithMany("Careers")
                         .HasForeignKey("FacultyId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Faculty");
@@ -616,16 +624,18 @@ namespace SpaceReservationSystem.Migrations
                 {
                     b.HasOne("SpaceReservationSystem.Domain.Entities.Alert", "Alert")
                         .WithMany()
-                        .HasForeignKey("AlertId");
+                        .HasForeignKey("AlertId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("SpaceReservationSystem.Domain.Entities.Reservation", "Reservation")
                         .WithMany()
-                        .HasForeignKey("ReservationId");
+                        .HasForeignKey("ReservationId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("SpaceReservationSystem.Domain.Entities.EmailTemplate", "Template")
                         .WithMany("EmailLogs")
                         .HasForeignKey("TemplateId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Alert");
@@ -639,12 +649,41 @@ namespace SpaceReservationSystem.Migrations
                 {
                     b.HasOne("SpaceReservationSystem.Domain.Entities.Space", "Space")
                         .WithMany("Reservations")
-                        .HasForeignKey("SpaceId");
+                        .HasForeignKey("SpaceId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("SpaceReservationSystem.Domain.Entities.User", "User")
                         .WithMany("Reservations")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.OwnsOne("SpaceReservationSystem.Domain.ValueObjects.ReservationSlot", "Slot", b1 =>
+                        {
+                            b1.Property<Guid>("ReservationId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<DateTime>("Date")
+                                .HasColumnType("timestamp with time zone")
+                                .HasColumnName("Date");
+
+                            b1.Property<TimeSpan>("EndTime")
+                                .HasColumnType("interval")
+                                .HasColumnName("EndTime");
+
+                            b1.Property<TimeSpan>("StartTime")
+                                .HasColumnType("interval")
+                                .HasColumnName("StartTime");
+
+                            b1.HasKey("ReservationId");
+
+                            b1.ToTable("Reservations");
+
+                            b1.WithOwner()
+                                .HasForeignKey("ReservationId");
+                        });
+
+                    b.Navigation("Slot")
                         .IsRequired();
 
                     b.Navigation("Space");
@@ -657,7 +696,7 @@ namespace SpaceReservationSystem.Migrations
                     b.HasOne("SpaceReservationSystem.Domain.Entities.User", "ChangedBy")
                         .WithMany("ReservationHistories")
                         .HasForeignKey("ChangedById")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("SpaceReservationSystem.Domain.Entities.Reservation", "Reservation")
@@ -682,7 +721,7 @@ namespace SpaceReservationSystem.Migrations
                     b.HasOne("SpaceReservationSystem.Domain.Entities.Resource", "Resource")
                         .WithMany("ReservationResources")
                         .HasForeignKey("ResourceId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Reservation");
@@ -694,15 +733,41 @@ namespace SpaceReservationSystem.Migrations
                 {
                     b.HasOne("SpaceReservationSystem.Domain.Entities.Career", "Career")
                         .WithMany("Users")
-                        .HasForeignKey("CareerId");
+                        .HasForeignKey("CareerId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("SpaceReservationSystem.Domain.Entities.Role", "Role")
                         .WithMany("Users")
                         .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.OwnsOne("SpaceReservationSystem.Domain.ValueObjects.Email", "Email", b1 =>
+                        {
+                            b1.Property<Guid>("UserId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .HasMaxLength(256)
+                                .HasColumnType("character varying(256)")
+                                .HasColumnName("Email");
+
+                            b1.HasKey("UserId");
+
+                            b1.HasIndex("Value")
+                                .IsUnique();
+
+                            b1.ToTable("Users");
+
+                            b1.WithOwner()
+                                .HasForeignKey("UserId");
+                        });
+
                     b.Navigation("Career");
+
+                    b.Navigation("Email")
+                        .IsRequired();
 
                     b.Navigation("Role");
                 });

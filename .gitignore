@@ -29,3 +29,5 @@ Thumbs.db
 
 # Ignorar migraciones de Entity Framework
 **/Migrations/*
+
+global.json
