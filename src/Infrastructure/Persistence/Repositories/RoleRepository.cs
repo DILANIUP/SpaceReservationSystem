@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using SpaceReservationSystem.Domain.Entities;
+using SpaceReservationSystem.Domain.Enums;
 using SpaceReservationSystem.Domain.Interfaces;
 using SpaceReservationSystem.Infrastructure.Data;
 
@@ -17,4 +18,7 @@ public class RoleRepository : IRoleRepository
     public void Add(Role role) => _context.Roles.Add(role);
 
     public void Update(Role role) => _context.Roles.Update(role);
+
+    public async Task<Role?> GetByCodeAsync(RoleCode code, CancellationToken ct = default)
+        => await _context.Roles.FirstOrDefaultAsync(r => r.Code == code, ct);
 }
