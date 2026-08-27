@@ -43,9 +43,9 @@ public class AuthService(
         await unitOfWork.SaveChangesAsync(ct);
 
         //!important: Asignamos el Role en memoria para poder generar el claim sin otro round-trip a la DB
-        typeof(User).GetProperty(nameof(User.Role))!.SetValue(user, role);
+        // typeof(User).GetProperty(nameof(User.Role))!.SetValue(user, role);
 
-        var accessToken = tokenService.GenerateAccessToken(user);
+        var accessToken = tokenService.GenerateAccessToken(user, role);
         var refreshToken = tokenService.GenerateRefreshToken();
 
         return new RegisterResponse(user.Id, accessToken, refreshToken);
@@ -57,11 +57,15 @@ public class AuthService(
         if (emailResult.IsFailure)
             return Result.Failure<LoginResponse>(UserErrors.InvalidEmail);
 
-        var user =  await userRepository.GetByEmailAsync(emailResult.Value, ct);
+        var user =  await userRepository.GetByEmailAsync(emailResult.Value, ct); // ya incluye Role (Include agregado en UserRepository)
         if (user is null || !passwordHasher.Verify(request.Password, user.PasswordHash))
             return Result.Failure<LoginResponse>(Error.Validation("Credentials", "Invalid email or password."));
 
-        var accessToken = tokenService.GenerateAccessToken(user);
+        var role = await roleRepository.GetByIdAsync(user.RoleId, ct);
+        if (role is null)
+            return Result.Failure<LoginResponse>(RoleErrors.NotFound);
+
+        var accessToken = tokenService.GenerateAccessToken(user, role);
         var refreshToken = tokenService.GenerateRefreshToken();
 
         return new LoginResponse(user.Id, accessToken, refreshToken);

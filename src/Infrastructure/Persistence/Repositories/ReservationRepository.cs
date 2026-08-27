@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using SpaceReservationSystem.Domain.Entities;
+using SpaceReservationSystem.Domain.Enums;
 using SpaceReservationSystem.Domain.Interfaces;
 using SpaceReservationSystem.Infrastructure.Data;
 
@@ -26,4 +27,12 @@ public class ReservationRepository : IReservationRepository
     public void Add(Reservation reservation) => _context.Reservations.Add(reservation);
 
     public void Update(Reservation reservation) => _context.Reservations.Update(reservation);
+
+    public async Task<IEnumerable<Reservation>> GetActiveBySpaceAndDateAsync(Guid spaceId, DateTime date, CancellationToken ct = default)
+        => await _context.Reservations
+            .Where(r => r.SpaceId == spaceId
+                && r.Slot.Date == date.Date
+                && r.CurrentStatus != ReservationStatus.Rejected
+                && r.CurrentStatus != ReservationStatus.Cancelled)
+            .ToListAsync(ct);
 }

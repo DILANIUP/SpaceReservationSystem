@@ -12,13 +12,13 @@ public class JwtTokenService(IOptions<JwtSettings> options): ITokenService
 {
     private readonly JwtSettings _settings = options.Value;
 
-    public string GenerateAccessToken(User user)
+    public string GenerateAccessToken(User user, Role role)
     {
         var claims = new[]
         {
             new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
             new Claim(JwtRegisteredClaimNames.Email, user.Email.Value),
-            new Claim(ClaimTypes.Role, user.Role.Code.ToString()),
+            new Claim(ClaimTypes.Role, role.Code.ToString()),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
 

@@ -1,12 +1,15 @@
+using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using SpaceReservationSystem.Application.Features.Auth;
+using SpaceReservationSystem.Application.Features.Reservations;
 using SpaceReservationSystem.Domain.Interfaces;
 using SpaceReservationSystem.Infrastructure.Authentication;
 using SpaceReservationSystem.Infrastructure.Data;
 using SpaceReservationSystem.Infrastructure.Persistence;
 using SpaceReservationSystem.Infrastructure.Persistence.Repositories;
+using System.Reflection;
 using System.Text;
 
 namespace SpaceReservationSystem.Infrastructure;
@@ -18,6 +21,7 @@ public static class DependencyInjection
         services.AddDatabase(configuration);
         services.AddRepositories();
         services.AddAuth(configuration);
+        services.AddValidation();
         services.AddScoped<AuthService>();
         return services;
     }
@@ -43,6 +47,7 @@ public static class DependencyInjection
         services.AddScoped<IAlertRepository, AlertRepository>();
         services.AddScoped<IEmailTemplateRepository, EmailTemplateRepository>();
         services.AddScoped<IEmailLogRepository, EmailLogRepository>();
+        services.AddScoped<ReservationService>();
     }
 
 
@@ -71,5 +76,10 @@ public static class DependencyInjection
 
         services.AddAuthorization();
 
+    }
+
+    private static void AddValidation(this IServiceCollection services)
+    {
+        services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
     }
 }
