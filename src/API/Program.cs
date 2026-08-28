@@ -8,9 +8,10 @@ builder.Services.AddInfrastructure(builder.Configuration); // Agrega la infraest
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
+// Configuracion de Swagger
 builder.Services.AddSwaggerGen(options =>
 {
-    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme // la API usa autenticación tipo Bearer
     {
         Name = "Authorization",
         Type = SecuritySchemeType.Http,
@@ -20,6 +21,7 @@ builder.Services.AddSwaggerGen(options =>
         Description = "Ingrese el token JWT. Ejemplo: Bearer {token}"
     });
 
+    // Swagger aplica el esquema a los endpoints, para que una vez que pegues el token en "Authorize"
     options.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
         {
