@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using SpaceReservationSystem.API.Contracts.Faculty;
-using SpaceReservationSystem.API.Services.Faculty;
+using SpaceReservationSystem.Application.Features.Faculty;
 
 namespace SpaceReservationSystem.API.Controllers;
 

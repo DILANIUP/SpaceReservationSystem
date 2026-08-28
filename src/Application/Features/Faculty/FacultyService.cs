@@ -2,7 +2,7 @@ using FacultyEntity = SpaceReservationSystem.Domain.Entities.Faculty;
 using SpaceReservationSystem.Domain.Interfaces;
 using SpaceReservationSystem.Domain.Primitives;
 
-namespace SpaceReservationSystem.API.Services.Faculty;
+namespace SpaceReservationSystem.Application.Features.Faculty;
 
 public class FacultyService
 {

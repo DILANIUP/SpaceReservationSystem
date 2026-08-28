@@ -1,4 +1,4 @@
-namespace SpaceReservationSystem.API.Contracts.Faculty;
+namespace SpaceReservationSystem.Application.Features.Faculty;
 
 public record CreateFacultyRequest(
     string Name

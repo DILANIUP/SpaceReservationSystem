@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using SpaceReservationSystem.Application.Features.Auth;
+using SpaceReservationSystem.Application.Features.Faculty;
 using SpaceReservationSystem.Application.Features.Reservations;
 using SpaceReservationSystem.Domain.Interfaces;
 using SpaceReservationSystem.Infrastructure.Authentication;
@@ -48,7 +49,7 @@ public static class DependencyInjection
         services.AddScoped<IEmailTemplateRepository, EmailTemplateRepository>();
         services.AddScoped<IEmailLogRepository, EmailLogRepository>();
         services.AddScoped<ReservationService>();
-        // services.AddScoped<FacultyService>(); 
+        services.AddScoped<FacultyService>(); 
     }
 
 
