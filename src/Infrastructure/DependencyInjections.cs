@@ -48,6 +48,7 @@ public static class DependencyInjection
         services.AddScoped<IEmailTemplateRepository, EmailTemplateRepository>();
         services.AddScoped<IEmailLogRepository, EmailLogRepository>();
         services.AddScoped<ReservationService>();
+        // services.AddScoped<FacultyService>(); 
     }
 
 
