@@ -5,6 +5,8 @@ using Microsoft.IdentityModel.Tokens;
 using SpaceReservationSystem.Application.Features.Auth;
 using SpaceReservationSystem.Application.Features.Faculty;
 using SpaceReservationSystem.Application.Features.Reservations;
+using SpaceReservationSystem.Application.Features.Resource;
+using SpaceReservationSystem.Application.Features.Space;
 using SpaceReservationSystem.Domain.Interfaces;
 using SpaceReservationSystem.Infrastructure.Authentication;
 using SpaceReservationSystem.Infrastructure.Data;
@@ -51,6 +53,8 @@ public static class DependencyInjection
         services.AddScoped<ReservationService>();
         services.AddScoped<FacultyService>();
         services.AddScoped<CareerRepository>();
+        services.AddScoped<SpaceService>();
+        services.AddScoped<ResourceService>();
     }
 
 
