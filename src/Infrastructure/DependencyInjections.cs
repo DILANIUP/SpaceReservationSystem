@@ -26,6 +26,7 @@ public static class DependencyInjection
         services.AddAuth(configuration);
         services.AddValidation();
         services.AddScoped<AuthService>();
+        services.AddScoped<ReservationService>();
         return services;
     }
 

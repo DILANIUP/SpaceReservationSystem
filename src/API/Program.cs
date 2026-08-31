@@ -1,4 +1,5 @@
 using Microsoft.OpenApi.Models;
+using SpaceReservationSystem.API.Middlewares;
 using SpaceReservationSystem.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -46,6 +47,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseHttpsRedirection();
 app.UseAuthentication(); // Habilita la autenticación
 app.UseAuthorization(); // Habilita la autorización

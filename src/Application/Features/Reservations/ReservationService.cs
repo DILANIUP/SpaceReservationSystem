@@ -1,5 +1,4 @@
 using FluentValidation;
-using Microsoft.AspNetCore.Mvc.Filters;
 using SpaceReservationSystem.Domain.Errors;
 using SpaceReservationSystem.Domain.Interfaces;
 using SpaceReservationSystem.Domain.Primitives;
@@ -53,6 +52,24 @@ public class ReservationService(
 
         reservationRepository.Add(reservation);
         await unitOfWork.SaveChangesAsync(ct);
+
+        return new ReservationResponse(
+            reservation.Id,
+            reservation.Slot.Date,
+            reservation.Slot.StartTime,
+            reservation.Slot.EndTime,
+            reservation.Reason,
+            reservation.CurrentStatus.ToString(),
+            reservation.UserId,
+            reservation.SpaceId
+        );
+    }
+
+    public async Task<Result<ReservationResponse>> GetByIdAsync(Guid id, CancellationToken ct)
+    {
+        var reservation = await reservationRepository.GetByIdWithDetailsAsync(id, ct);
+        if(reservation is null)
+            return Result.Failure<ReservationResponse>(Error.NotFound("Reservation", id.ToString()));
 
         return new ReservationResponse(
             reservation.Id,
