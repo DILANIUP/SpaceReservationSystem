@@ -2,6 +2,7 @@ using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using SpaceReservationSystem.Application.Features.Alert;
 using SpaceReservationSystem.Application.Features.Auth;
 using SpaceReservationSystem.Application.Features.Faculty;
 using SpaceReservationSystem.Application.Features.Reservations;
@@ -56,6 +57,7 @@ public static class DependencyInjection
         services.AddScoped<CareerRepository>();
         services.AddScoped<SpaceService>();
         services.AddScoped<ResourceService>();
+        services.AddScoped<AlertService>();
     }
 
 

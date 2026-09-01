@@ -19,6 +19,7 @@ public class SpaceController : ControllerBase
         Guid id,
         CancellationToken ct)
     {
+        // Convierte la entidad Domain en un DTO de respuesta
         var result = await _spaceService.GetByIdAsync(id, ct);
 
         if (result.IsFailure)
@@ -64,6 +65,7 @@ public class SpaceController : ControllerBase
             response);
     }
 
+    // Define un endpoint HTTP PUT para actualizar un espacio
     [HttpPut("{id:guid}")]
     public async Task<IActionResult> Update(
         Guid id,
@@ -83,6 +85,7 @@ public class SpaceController : ControllerBase
         return NoContent();
     }
 
+    // Define un endpoint PATCH para activar un espacio
     [HttpPatch("{id:guid}/activate")]
     public async Task<IActionResult> Activate(
         Guid id,
