@@ -5,6 +5,8 @@ using SpaceReservationSystem.Domain.Interfaces;
 using SpaceReservationSystem.Domain.Primitives;
 using SpaceReservationSystem.Domain.ValueObjects;
 using SpaceReservationSystem.Infrastructure.Authentication;
+// Alias para evitar conflicto con el namespace Application.Features.Email
+using EmailValueObject = SpaceReservationSystem.Domain.ValueObjects.Email;
 
 namespace SpaceReservationSystem.Application.Features.Auth;
 
@@ -21,8 +23,10 @@ public class AuthService(
         if(string.IsNullOrWhiteSpace(request.Password) || request.Password.Length < 6)
             return Result.Failure<RegisterResponse>(Error.Validation("Password", "Password must be at least 6 characters."));
 
-        var emailResult = Email.Create(request.Email);
-        if(emailResult.IsFailure)
+        //var emailResult = Email.Create(request.Email);
+        // Usamos el Email del Domain, no el módulo Application.Features.Email.
+        var emailResult = EmailValueObject.Create(request.Email);
+        if (emailResult.IsFailure)
             return Result.Failure<RegisterResponse>(emailResult.Error);
 
         if(await userRepository.ExistsByEmailAsync(emailResult.Value, ct))
@@ -53,7 +57,9 @@ public class AuthService(
 
     public async Task<Result<LoginResponse>> LoginAsync(LoginRequest request, CancellationToken ct)
     {
-        var emailResult = Email.Create(request.Email);
+        //var emailResult = Email.Create(request.Email);
+        // Usamos el Email del Domain, no el módulo Application.Features.Email.
+        var emailResult = EmailValueObject.Create(request.Email);
         if (emailResult.IsFailure)
             return Result.Failure<LoginResponse>(UserErrors.InvalidEmail);
 

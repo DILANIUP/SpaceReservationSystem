@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using SpaceReservationSystem.Application.Features.Alert;
 using SpaceReservationSystem.Application.Features.Auth;
+using SpaceReservationSystem.Application.Features.EmailTemplate;
 using SpaceReservationSystem.Application.Features.Faculty;
 using SpaceReservationSystem.Application.Features.Reservations;
 using SpaceReservationSystem.Application.Features.Resource;
@@ -26,11 +27,21 @@ public static class DependencyInjection
         services.AddRepositories();
         services.AddAuth(configuration);
         services.AddValidation();
+        services.AddEmail(configuration); // Aumento por llamado del metodo implementado
         services.AddScoped<AuthService>();
         services.AddScoped<ReservationService>();
         return services;
     }
 
+    // Prepara el sistema para enviar correos y la clase del servicio necesite enviar un email
+    private static void AddEmail(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.Configure<SpaceReservationSystem.Infrastructure.Mail.SmtpSettings>(
+            configuration.GetSection("Smtp"));
+
+        services.AddScoped<SpaceReservationSystem.API.Abstractions.Email.IEmailService,
+            SpaceReservationSystem.Infrastructure.Mail.SmtpEmailService>();
+    }
     private static void AddDatabase(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddDbContext<AppDbContext>(options =>
@@ -58,6 +69,8 @@ public static class DependencyInjection
         services.AddScoped<SpaceService>();
         services.AddScoped<ResourceService>();
         services.AddScoped<AlertService>();
+        services.AddScoped<EmailTemplateService>();
+        services.AddScoped<Application.Features.Email.EmailService>();
     }
 
 
