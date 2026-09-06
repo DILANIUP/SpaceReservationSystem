@@ -21,6 +21,10 @@ public class AuthService(
         if(string.IsNullOrWhiteSpace(request.Password) || request.Password.Length < 6)
             return Result.Failure<RegisterResponse>(Error.Validation("Password", "Password must be at least 6 characters."));
 
+        if(request.RequestedRole != RoleCode.Student && request.RequestedRole != RoleCode.Teacher)
+            return Result.Failure<RegisterResponse>(
+                Error.Validation("RequestRole", "Solo puedes registrarte como Student o Teacher"));
+
         var emailResult = Email.Create(request.Email);
         if(emailResult.IsFailure)
             return Result.Failure<RegisterResponse>(emailResult.Error);
@@ -28,7 +32,7 @@ public class AuthService(
         if(await userRepository.ExistsByEmailAsync(emailResult.Value, ct))
             return Result.Failure<RegisterResponse>(UserErrors.InvalidEmail);
 
-        var role = await roleRepository.GetByCodeAsync(RoleCode.Student, ct);
+        var role = await roleRepository.GetByCodeAsync(request.RequestedRole, ct);
         if(role is null)
             return Result.Failure<RegisterResponse>(RoleErrors.NotFound);
 
@@ -41,9 +45,6 @@ public class AuthService(
         var user = userResult.Value;
         userRepository.Add(user);
         await unitOfWork.SaveChangesAsync(ct);
-
-        //!important: Asignamos el Role en memoria para poder generar el claim sin otro round-trip a la DB
-        // typeof(User).GetProperty(nameof(User.Role))!.SetValue(user, role);
 
         var accessToken = tokenService.GenerateAccessToken(user, role);
         var refreshToken = tokenService.GenerateRefreshToken();

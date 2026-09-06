@@ -1,3 +1,4 @@
+
 namespace SpaceReservationSystem.Application.Features.Reservations;
 
 public sealed record CreateReservationRequest(
@@ -5,7 +6,8 @@ public sealed record CreateReservationRequest(
     TimeSpan StartTime,
     TimeSpan EndTime,
     string Reason,
-    Guid? SpaceId
+    Guid? SpaceId,
+    List<ReservationResourceRequest>? Resources = null
 );
 
 public sealed record ReservationResponse(
@@ -17,4 +19,14 @@ public sealed record ReservationResponse(
     string CurrentStatus,
     Guid UserId,
     Guid? SpaceId
+);
+
+public sealed record TransitionRequest(
+    string Justification,
+    Guid? SpaceId = null
+);
+
+public sealed record ReservationResourceRequest(
+    Guid ResourceId,
+    int Quantity
 );

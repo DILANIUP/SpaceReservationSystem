@@ -8,6 +8,7 @@ using SpaceReservationSystem.Application.Features.Faculty;
 using SpaceReservationSystem.Application.Features.Reservations;
 using SpaceReservationSystem.Application.Features.Resource;
 using SpaceReservationSystem.Application.Features.Space;
+using SpaceReservationSystem.Application.Features.Vouchers;
 using SpaceReservationSystem.Domain.Interfaces;
 using SpaceReservationSystem.Infrastructure.Authentication;
 using SpaceReservationSystem.Infrastructure.Data;
@@ -57,7 +58,6 @@ public static class DependencyInjection
         services.AddScoped<CareerRepository>();
         services.AddScoped<SpaceService>();
         services.AddScoped<ResourceService>();
-        services.AddScoped<AlertService>();
     }
 
 
@@ -72,6 +72,7 @@ public static class DependencyInjection
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
             {
+                options.MapInboundClaims = false; // Evita que se mapeen automáticamente los sub de claims
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = true,

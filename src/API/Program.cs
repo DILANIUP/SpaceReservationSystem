@@ -1,7 +1,9 @@
 using Microsoft.OpenApi.Models;
+using QuestPDF.Infrastructure;
 using SpaceReservationSystem.API.Middlewares;
 using SpaceReservationSystem.Infrastructure;
 
+QuestPDF.Settings.License = LicenseType.Community;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddInfrastructure(builder.Configuration); // Agrega la infraestructura y la base de datos al contenedor de servicios
@@ -38,6 +40,7 @@ builder.Services.AddSwaggerGen(options =>
         }
     });
 });
+
 
 var app = builder.Build();
 

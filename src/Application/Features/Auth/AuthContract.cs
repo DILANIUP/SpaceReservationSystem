@@ -1,10 +1,13 @@
+using SpaceReservationSystem.Domain.Enums;
+
 namespace SpaceReservationSystem.Application.Features.Auth;
 
 public sealed record RegisterRequest(
     string Name,
     string Email,
     string Password,
-    string Phone
+    string Phone,
+    RoleCode RequestedRole = RoleCode.Student
 );
 
 public sealed record RegisterResponse(

@@ -90,10 +90,13 @@ public class Reservation : AuditableEntity
         return Result.Success();
     }
 
-    public Result AssignBySpaceManagement()
+    public Result AssignBySpaceManagement(Guid? spaceId = null)
     {
         if (CurrentStatus != ReservationStatus.PendingAssets)
             return Result.Failure(ReservationErrors.InvalidStatusTransition);
+
+        if (SpaceId is not null)
+            SpaceId = SpaceId;
 
         CurrentStatus = ReservationStatus.Approved;
         return Result.Success();
