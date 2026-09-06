@@ -3,11 +3,13 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SpaceReservationSystem.Application.Features.Reservations;
+using SpaceReservationSystem.Domain.Enums;
+using SpaceReservationSystem.Domain.Primitives;
 
 namespace SpaceReservationSystem.API.Controllers;
 
 [ApiController]
-[Route("api/reservation")]
+[Route("api/reservations")]
 [Authorize]
 public class ReservationController(ReservationService reservationService) : ControllerBase
 {
@@ -16,8 +18,8 @@ public class ReservationController(ReservationService reservationService) : Cont
     {
         var result = await reservationService.CreateAsync(request, GetUserId(), ct);
         return result.IsSuccess
-            ? CreatedAtAction(nameof(GetById), new { id = result.Value.Id}, result.Value)
-            : BadRequest(new {result.Error.Code, result.Error.Description});
+            ? CreatedAtAction(nameof(GetById), new { id = result.Value.Id }, result.Value)
+            : BadRequest(new { result.Error.Code, result.Error.Description });
     }
 
     [HttpGet("{id:guid}")]
@@ -26,9 +28,50 @@ public class ReservationController(ReservationService reservationService) : Cont
         var result = await reservationService.GetByIdAsync(id, ct);
         return result.IsSuccess
             ? Ok(result.Value)
-            : NotFound(new {result.Error.Code, result.Error.Description});
+            : NotFound(new { result.Error.Code, result.Error.Description });
+    }
+
+    [HttpPost("{id:guid}/submit")]
+    [Authorize(Roles = "Student,Teacher,Admin")]
+    public Task<IActionResult> Submit(Guid id, [FromBody] TransitionRequest request, CancellationToken ct)
+        => Handle(reservationService.SubmitToCoordinatorAsync(id, GetUserId(), request.Justification, ct));
+
+    [HttpPost("{id:guid}/elevate")]
+    [Authorize(Roles = "Coordinator,Admin")]
+    public Task<IActionResult> Elevate(Guid id, [FromBody] TransitionRequest request, CancellationToken ct)
+        => Handle(reservationService.ElevateToVicerrectorAsync(id, GetUserId(), request.Justification, ct));
+
+    [HttpPost("{id:guid}/approve")]
+    [Authorize(Roles = "Vicerrector,Admin")]
+    public Task<IActionResult> Approve(Guid id, [FromBody] TransitionRequest request, CancellationToken ct)
+        => Handle(reservationService.ApproveByVicerrectorAsync(id, GetUserId(), request.Justification, ct));
+
+    [HttpPost("{id:guid}/assign")]
+    [Authorize(Roles = "Bienes,Admin")]
+    public Task<IActionResult> Assign(Guid id, [FromBody] TransitionRequest request, CancellationToken ct)
+        => Handle(reservationService.AssignBySpaceManagementAsync(id, GetUserId(), request.Justification, request.SpaceId, ct));
+
+    [HttpPost("{id:guid}/reject")]
+    [Authorize(Roles = "Coordinator,Vicerrector,Bienes,Admin")]
+    public Task<IActionResult> Reject(Guid id, [FromBody] TransitionRequest request, CancellationToken ct)
+        => Handle(reservationService.RejectAsync(id, GetUserId(), GetUserRole(), request.Justification, ct));
+
+    [HttpPost("{id:guid}/cancel")]
+    [Authorize(Roles = "Student,Teacher,Admin")]
+    public Task<IActionResult> Cancel(Guid id, [FromBody] TransitionRequest request, CancellationToken ct)
+        => Handle(reservationService.CancelAsync(id, GetUserId(), request.Justification, ct));
+
+    private async Task<IActionResult> Handle(Task<Result<ReservationResponse>> operation)
+    {
+        var result = await operation;
+        return result.IsSuccess
+            ? Ok(result.Value)
+            : BadRequest(new { result.Error.Code, result.Error.Description });
     }
 
     private Guid GetUserId() =>
         Guid.Parse(User.FindFirstValue(JwtRegisteredClaimNames.Sub)!);
+
+    private RoleCode GetUserRole() =>
+        Enum.Parse<RoleCode>(User.FindFirstValue(ClaimTypes.Role)!);
 }
