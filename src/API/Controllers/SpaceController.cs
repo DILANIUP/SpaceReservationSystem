@@ -2,9 +2,11 @@ using Microsoft.AspNetCore.Mvc;
 using SpaceReservationSystem.Application.Features.Space;
 
 namespace SpaceReservationSystem.API.Controllers;
+using Microsoft.AspNetCore.Authorization;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class SpaceController : ControllerBase
 {
     private readonly SpaceService _spaceService;
@@ -37,6 +39,7 @@ public class SpaceController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Create(
         CreateSpaceRequest request,
         CancellationToken ct)
@@ -67,6 +70,7 @@ public class SpaceController : ControllerBase
 
     // Define un endpoint HTTP PUT para actualizar un espacio
     [HttpPut("{id:guid}")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Update(
         Guid id,
         UpdateSpaceRequest request,
@@ -87,6 +91,7 @@ public class SpaceController : ControllerBase
 
     // Define un endpoint PATCH para activar un espacio
     [HttpPatch("{id:guid}/activate")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Activate(
         Guid id,
         CancellationToken ct)
@@ -100,6 +105,7 @@ public class SpaceController : ControllerBase
     }
 
     [HttpPatch("{id:guid}/deactivate")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Deactivate(
         Guid id,
         CancellationToken ct)

@@ -2,9 +2,11 @@ using Microsoft.AspNetCore.Mvc;
 using SpaceReservationSystem.Application.Features.Alert;
 
 namespace SpaceReservationSystem.API.Controllers;
+using Microsoft.AspNetCore.Authorization;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class AlertController : ControllerBase
 {
     private readonly AlertService _alertService;
@@ -30,6 +32,7 @@ public class AlertController : ControllerBase
 
     // reportar una nueva incidencia (daño, mantenimiento, etc.)
     [HttpPost]
+    [Authorize(Roles = "Student,Teacher,Bienes,Admin")]
     public async Task<IActionResult> Create(CreateAlertRequest request, CancellationToken ct)
     {
         var result = await _alertService.CreateAsync(
@@ -48,6 +51,7 @@ public class AlertController : ControllerBase
 
     // marcar la incidencia como resuelta
     [HttpPatch("{id:guid}/resolve")]
+    [Authorize(Roles = "Bienes,Admin")]
     public async Task<IActionResult> Resolve(Guid id, CancellationToken ct)
     {
         var result = await _alertService.ResolveAsync(id, ct);

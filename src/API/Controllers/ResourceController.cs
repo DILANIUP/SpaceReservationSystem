@@ -2,9 +2,11 @@ using Microsoft.AspNetCore.Mvc;
 using SpaceReservationSystem.Application.Features.Resource;
 
 namespace SpaceReservationSystem.API.Controllers;
+using Microsoft.AspNetCore.Authorization;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class ResourceController : ControllerBase
 {
     private readonly ResourceService _resourceService;
@@ -35,6 +37,7 @@ public class ResourceController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = "Bienes,Admin")]
     public async Task<IActionResult> Create(
         CreateResourceRequest request,
         CancellationToken ct)
@@ -62,6 +65,7 @@ public class ResourceController : ControllerBase
     }
 
     [HttpPut("{id:guid}")]
+    [Authorize(Roles = "Bienes,Admin")]
     public async Task<IActionResult> Update(
         Guid id,
         UpdateResourceRequest request,
@@ -81,6 +85,7 @@ public class ResourceController : ControllerBase
     }
 
     [HttpPatch("{id:guid}/activate")]
+    [Authorize(Roles = "Bienes,Admin")]
     public async Task<IActionResult> Activate(
         Guid id,
         CancellationToken ct)
@@ -94,6 +99,7 @@ public class ResourceController : ControllerBase
     }
 
     [HttpPatch("{id:guid}/deactivate")]
+    [Authorize(Roles = "Bienes,Admin")]
     public async Task<IActionResult> Deactivate(
         Guid id,
         CancellationToken ct)

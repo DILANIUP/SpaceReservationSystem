@@ -2,9 +2,11 @@ using Microsoft.AspNetCore.Mvc;
 using SpaceReservationSystem.Application.Features.Career;
 
 namespace SpaceReservationSystem.API.Controllers;
+using Microsoft.AspNetCore.Authorization;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class CareerController : ControllerBase
 {
     private readonly CareerService _careerService;
@@ -33,6 +35,7 @@ public class CareerController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Create(
         CreateCareerRequest request,
         CancellationToken ct)
@@ -57,6 +60,7 @@ public class CareerController : ControllerBase
     }
 
     [HttpPut("{id:guid}")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Update(
         Guid id,
         UpdateCareerRequest request,

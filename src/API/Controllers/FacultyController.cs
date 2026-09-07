@@ -2,9 +2,12 @@ using Microsoft.AspNetCore.Mvc;
 using SpaceReservationSystem.Application.Features.Faculty;
 
 namespace SpaceReservationSystem.API.Controllers;
+using Microsoft.AspNetCore.Authorization;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
+
 public class FacultyController : ControllerBase
 {
     private readonly FacultyService _facultyService;
@@ -32,6 +35,7 @@ public class FacultyController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Create(
         CreateFacultyRequest request,
         CancellationToken ct)
@@ -54,6 +58,7 @@ public class FacultyController : ControllerBase
     }
 
     [HttpPut("{id:guid}")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Update(
         Guid id,
         UpdateFacultyRequest request,
