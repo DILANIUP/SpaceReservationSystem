@@ -27,11 +27,20 @@ public static class DependencyInjection
         services.AddRepositories();
         services.AddAuth(configuration);
         services.AddValidation();
+        // services.AddEmail(configuration);
         services.AddScoped<AuthService>();
         services.AddScoped<ReservationService>();
         return services;
     }
 
+    // private static void AddEmail(this IServiceCollection services, IConfiguration configuration)
+    // {
+    //     services.Configure<SpaceReservationSystem.Infrastructure.Mail.SmtpSettings>(
+    //         configuration.GetSection("Smtp"));
+
+    //     services.AddScoped<SpaceReservationSystem.API.Abstractions.Email.IEmailService,
+    //         SpaceReservationSystem.Infrastructure.Mail.SmtpEmailService>();
+    // }
     private static void AddDatabase(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddDbContext<AppDbContext>(options =>
@@ -58,6 +67,10 @@ public static class DependencyInjection
         services.AddScoped<CareerRepository>();
         services.AddScoped<SpaceService>();
         services.AddScoped<ResourceService>();
+        services.AddScoped<VoucherService>();
+        services.AddScoped<AlertService>();
+        // services.AddScoped<EmailTemplateService>();
+        // services.AddScoped<Application.Features.Email.EmailService>();
     }
 
 
