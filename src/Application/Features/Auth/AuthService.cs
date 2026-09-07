@@ -5,8 +5,6 @@ using SpaceReservationSystem.Domain.Interfaces;
 using SpaceReservationSystem.Domain.Primitives;
 using SpaceReservationSystem.Domain.ValueObjects;
 using SpaceReservationSystem.Infrastructure.Authentication;
-// Alias para evitar conflicto con el namespace Application.Features.Email
-using EmailValueObject = SpaceReservationSystem.Domain.ValueObjects.Email;
 
 namespace SpaceReservationSystem.Application.Features.Auth;
 
@@ -23,16 +21,18 @@ public class AuthService(
         if(string.IsNullOrWhiteSpace(request.Password) || request.Password.Length < 6)
             return Result.Failure<RegisterResponse>(Error.Validation("Password", "Password must be at least 6 characters."));
 
-        //var emailResult = Email.Create(request.Email);
-        // Usamos el Email del Domain, no el módulo Application.Features.Email.
-        var emailResult = EmailValueObject.Create(request.Email);
-        if (emailResult.IsFailure)
+        if(request.RequestedRole != RoleCode.Student && request.RequestedRole != RoleCode.Teacher)
+            return Result.Failure<RegisterResponse>(
+                Error.Validation("RequestRole", "Solo puedes registrarte como Student o Teacher"));
+
+        var emailResult = Email.Create(request.Email);
+        if(emailResult.IsFailure)
             return Result.Failure<RegisterResponse>(emailResult.Error);
 
         if(await userRepository.ExistsByEmailAsync(emailResult.Value, ct))
             return Result.Failure<RegisterResponse>(UserErrors.InvalidEmail);
 
-        var role = await roleRepository.GetByCodeAsync(RoleCode.Student, ct);
+        var role = await roleRepository.GetByCodeAsync(request.RequestedRole, ct);
         if(role is null)
             return Result.Failure<RegisterResponse>(RoleErrors.NotFound);
 
@@ -46,9 +46,6 @@ public class AuthService(
         userRepository.Add(user);
         await unitOfWork.SaveChangesAsync(ct);
 
-        //!important: Asignamos el Role en memoria para poder generar el claim sin otro round-trip a la DB
-        // typeof(User).GetProperty(nameof(User.Role))!.SetValue(user, role);
-
         var accessToken = tokenService.GenerateAccessToken(user, role);
         var refreshToken = tokenService.GenerateRefreshToken();
 
@@ -57,9 +54,7 @@ public class AuthService(
 
     public async Task<Result<LoginResponse>> LoginAsync(LoginRequest request, CancellationToken ct)
     {
-        //var emailResult = Email.Create(request.Email);
-        // Usamos el Email del Domain, no el módulo Application.Features.Email.
-        var emailResult = EmailValueObject.Create(request.Email);
+        var emailResult = Email.Create(request.Email);
         if (emailResult.IsFailure)
             return Result.Failure<LoginResponse>(UserErrors.InvalidEmail);
 
