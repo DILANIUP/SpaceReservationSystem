@@ -35,4 +35,6 @@ public class ReservationRepository : IReservationRepository
                 && r.CurrentStatus != ReservationStatus.Rejected
                 && r.CurrentStatus != ReservationStatus.Cancelled)
             .ToListAsync(ct);
+
+    public void AddHistory(ReservationHistory history) => _context.ReservationHistories.Add(history);
 }
