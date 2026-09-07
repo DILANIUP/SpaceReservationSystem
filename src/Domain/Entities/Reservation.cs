@@ -96,7 +96,7 @@ public class Reservation : AuditableEntity
             return Result.Failure(ReservationErrors.InvalidStatusTransition);
 
         if (SpaceId is not null)
-            SpaceId = SpaceId;
+            SpaceId = SpaceId.Value;
 
         CurrentStatus = ReservationStatus.Approved;
         return Result.Success();

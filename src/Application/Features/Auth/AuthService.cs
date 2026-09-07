@@ -5,6 +5,7 @@ using SpaceReservationSystem.Domain.Interfaces;
 using SpaceReservationSystem.Domain.Primitives;
 using SpaceReservationSystem.Domain.ValueObjects;
 using SpaceReservationSystem.Infrastructure.Authentication;
+using EmailValueObject = SpaceReservationSystem.Domain.ValueObjects.Email;
 
 namespace SpaceReservationSystem.Application.Features.Auth;
 
@@ -25,7 +26,7 @@ public class AuthService(
             return Result.Failure<RegisterResponse>(
                 Error.Validation("RequestRole", "Solo puedes registrarte como Student o Teacher"));
 
-        var emailResult = Email.Create(request.Email);
+        var emailResult = EmailValueObject.Create(request.Email);
         if(emailResult.IsFailure)
             return Result.Failure<RegisterResponse>(emailResult.Error);
 
@@ -54,7 +55,8 @@ public class AuthService(
 
     public async Task<Result<LoginResponse>> LoginAsync(LoginRequest request, CancellationToken ct)
     {
-        var emailResult = Email.Create(request.Email);
+        // var emailResult = Email.Create(request.Email);
+        var emailResult = EmailValueObject.Create(request.Email);
         if (emailResult.IsFailure)
             return Result.Failure<LoginResponse>(UserErrors.InvalidEmail);
 

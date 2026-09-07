@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using SpaceReservationSystem.Application.Features.Alert;
 using SpaceReservationSystem.Application.Features.Auth;
+using SpaceReservationSystem.Application.Features.Career;
+using SpaceReservationSystem.Application.Features.EmailTemplate;
 using SpaceReservationSystem.Application.Features.Faculty;
 using SpaceReservationSystem.Application.Features.Reservations;
 using SpaceReservationSystem.Application.Features.Resource;
@@ -27,20 +29,20 @@ public static class DependencyInjection
         services.AddRepositories();
         services.AddAuth(configuration);
         services.AddValidation();
-        // services.AddEmail(configuration);
+        services.AddEmail(configuration);
         services.AddScoped<AuthService>();
         services.AddScoped<ReservationService>();
         return services;
     }
 
-    // private static void AddEmail(this IServiceCollection services, IConfiguration configuration)
-    // {
-    //     services.Configure<SpaceReservationSystem.Infrastructure.Mail.SmtpSettings>(
-    //         configuration.GetSection("Smtp"));
+    private static void AddEmail(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.Configure<Mail.SmtpSettings>(
+            configuration.GetSection("Smtp"));
 
-    //     services.AddScoped<SpaceReservationSystem.API.Abstractions.Email.IEmailService,
-    //         SpaceReservationSystem.Infrastructure.Mail.SmtpEmailService>();
-    // }
+        services.AddScoped<API.Abstractions.Email.IEmailService,
+            Mail.SmtpEmailService>();
+    }
     private static void AddDatabase(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddDbContext<AppDbContext>(options =>
@@ -64,13 +66,13 @@ public static class DependencyInjection
         services.AddScoped<IEmailLogRepository, EmailLogRepository>();
         services.AddScoped<ReservationService>();
         services.AddScoped<FacultyService>();
-        services.AddScoped<CareerRepository>();
+        services.AddScoped<CareerService>();
         services.AddScoped<SpaceService>();
         services.AddScoped<ResourceService>();
         services.AddScoped<VoucherService>();
         services.AddScoped<AlertService>();
-        // services.AddScoped<EmailTemplateService>();
-        // services.AddScoped<Application.Features.Email.EmailService>();
+        services.AddScoped<EmailTemplateService>();
+        services.AddScoped<Application.Features.Email.EmailService>();
     }
 
 
