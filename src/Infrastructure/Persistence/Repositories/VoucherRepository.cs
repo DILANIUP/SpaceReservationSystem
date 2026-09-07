@@ -14,6 +14,9 @@ public class VoucherRepository : IVoucherRepository
     public async Task<Voucher?> GetByIdAsync(Guid id, CancellationToken ct = default)
         => await _context.Vouchers.FirstOrDefaultAsync(v => v.Id == id, ct);
 
+    public async Task<Voucher?> GetByReservationIdAsync(Guid reservationId, CancellationToken ct = default)
+        => await _context.Vouchers.FirstOrDefaultAsync(v => v.ReservationId == reservationId, ct);
+
     public void Add(Voucher voucher) => _context.Vouchers.Add(voucher);
 
     public void Update(Voucher voucher) => _context.Vouchers.Update(voucher);

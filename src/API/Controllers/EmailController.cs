@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SpaceReservationSystem.Application.Features.Email;
 
@@ -5,6 +6,7 @@ namespace SpaceReservationSystem.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class EmailController : ControllerBase
 {
     private readonly EmailService _emailService;

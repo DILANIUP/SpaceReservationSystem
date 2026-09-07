@@ -18,6 +18,7 @@ public class FacultyController : ControllerBase
     }
 
     [HttpGet("{id:guid}")]
+    
     public async Task<IActionResult> GetById(
         Guid id,
         CancellationToken ct)

@@ -51,6 +51,28 @@ public class VoucherService(
         return new VoucherResponse(voucherResult.Value.Id, voucherResult.Value.PdfFilePath, voucherResult.Value.GenerationDate);
     }
 
+
+    public async Task<Result<VoucherFileResult>> GetPdfForUserAsync(Guid reservationId, Guid userId, RoleCode userRole, CancellationToken ct)
+    {
+        var reservation = await reservationRepository.GetByIdAsync(reservationId, ct);
+        if (reservation is null)
+            return Result.Failure<VoucherFileResult>(Error.NotFound("Reservation", reservationId.ToString()));
+
+        var isStaff = userRole is RoleCode.Admin or RoleCode.Bienes or RoleCode.Coordinator or RoleCode.Vicerrector;
+        if(!isStaff && reservation.UserId != userId)
+            return Result.Failure<VoucherFileResult>(Error.Conflict("Voucher", "No tienes permiso para descargar el voucher de esta reserva."));
+
+        var voucher = await voucherRepository.GetByReservationIdAsync(reservationId, ct);
+        if (voucher is null)
+            return Result.Failure<VoucherFileResult>(Error.NotFound("Voucher", reservationId.ToString()));
+
+        if(!File.Exists(voucher.PdfFilePath))
+            return Result.Failure<VoucherFileResult>(
+                Error.NotFound("VoucherFile", voucher.PdfFilePath));
+
+        var bytes = await File.ReadAllBytesAsync(voucher.PdfFilePath, ct);
+        return new VoucherFileResult(bytes, $"voucher-{reservationId}.pdf");
+    }
     private static void BuildPdf(Reservation reservation, string path)
     {
         Document.Create(container =>

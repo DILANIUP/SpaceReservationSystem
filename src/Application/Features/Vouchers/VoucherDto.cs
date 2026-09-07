@@ -6,3 +6,8 @@ public sealed record VoucherResponse(
     string PdfFilePath,
     DateTime GenerationDate
 );
+
+public sealed record VoucherFileResult(
+    byte[] Bytes,
+    string FileName
+);

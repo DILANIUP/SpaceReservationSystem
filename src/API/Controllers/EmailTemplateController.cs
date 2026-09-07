@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SpaceReservationSystem.Application.Features.EmailTemplate;
 
@@ -5,6 +6,8 @@ namespace SpaceReservationSystem.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize(Roles = "Admin")]
+
 public class EmailTemplateController : ControllerBase
 {
     private readonly EmailTemplateService _templateService;
