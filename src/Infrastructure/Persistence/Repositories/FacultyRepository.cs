@@ -14,6 +14,9 @@ public class FacultyRepository : IFacultyRepository
     public async Task<Faculty?> GetByIdAsync(Guid id, CancellationToken ct = default)
         => await _context.Faculties.FirstOrDefaultAsync(f => f.Id == id, ct);
 
+    public async Task<List<Faculty>> GetAllAsync(CancellationToken ct = default)
+        => await _context.Faculties.ToListAsync(ct);
+
     public void Add(Faculty faculty) => _context.Faculties.Add(faculty);
 
     public void Update(Faculty faculty) => _context.Faculties.Update(faculty);

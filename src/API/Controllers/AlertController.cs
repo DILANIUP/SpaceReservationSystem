@@ -39,7 +39,7 @@ public class AlertController : ControllerBase
             request.Type, request.Description, request.ResourceId, request.SpaceId, ct);
 
         if (result.IsFailure)
-            return BadRequest(result.Error); 
+            return BadRequest(result.Error);
 
         var response = new AlertResponse(
             result.Value.Id, result.Value.Type, result.Value.Description,

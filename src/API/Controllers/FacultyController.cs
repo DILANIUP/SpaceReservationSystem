@@ -17,8 +17,15 @@ public class FacultyController : ControllerBase
         _facultyService = facultyService;
     }
 
+    [HttpGet]
+    public async Task<IActionResult> GetAll(CancellationToken ct)
+    {
+        var faculties = await _facultyService.GetAllAsync(ct);
+        var response = faculties.Select(f => new FacultyResponse(f.Id, f.Name));
+        return Ok(response);
+    }
+
     [HttpGet("{id:guid}")]
-    
     public async Task<IActionResult> GetById(
         Guid id,
         CancellationToken ct)

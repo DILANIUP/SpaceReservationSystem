@@ -68,4 +68,7 @@ public class FacultyService
 
         return Result.Success();
     }
+
+    public async Task<List<FacultyEntity>> GetAllAsync(CancellationToken ct = default)
+        => await _facultyRepository.GetAllAsync(ct);
 }
